@@ -3,7 +3,6 @@ package com.qinfoapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
@@ -26,24 +25,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-        RenderableViewManager.createGroupViewManager(),
-        RenderableViewManager.createPathViewManager(),
-        RenderableViewManager.createCircleViewManager(),
-        RenderableViewManager.createEllipseViewManager(),
-        RenderableViewManager.createLineViewManager(),
-        RenderableViewManager.createRectViewManager(),
-        RenderableViewManager.createTextViewManager(),
-        RenderableViewManager.createTSpanViewManager(),
-        RenderableViewManager.createTextPathViewManager(),
-        RenderableViewManager.createImageViewManager(),
-        RenderableViewManager.createClipPathViewManager(),
-        RenderableViewManager.createDefsViewManager(),
-        RenderableViewManager.createUseViewManager(),
-        RenderableViewManager.createSymbolManager(),
-        RenderableViewManager.createLinearGradientManager(),
-        RenderableViewManager.createRadialGradientManager(),
           new MainReactPackage(),
-            new SvgPackage(),
             new VectorIconsPackage(),
             new ReactNativePushNotificationPackage(),
             new FIRMessagingPackage()
