@@ -5,6 +5,7 @@ import {
     View,
     Image,
     TouchableOpacity,
+    ScrollView
 } from 'react-native';
 import SideMenu from 'react-native-side-menu';
 
@@ -70,39 +71,37 @@ export default class StructChart_Scene extends Component {
 
         return (
 
+                <SideMenu
+                    menu={menu}
+                    isOpen={this.state.isOpen}
+                    onChange={isOpen => this.updateMenuState(isOpen)}>
 
-            <SideMenu
-                menu={menu}
-                isOpen={this.state.isOpen}
-                onChange={isOpen => this.updateMenuState(isOpen)}>
+                    <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
 
-                <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
+                        <Header
+                            centerComponent={{ text: 'Home' }}
+                            backgroundColor={'#fff'}
+                        >
 
-                    <Header
-                        centerComponent={{ text: 'Home' }}
-                        backgroundColor={'#fff'}
+                        </Header>
+
+                        <Structchart_comp />
+
+                    </View>
+
+
+                    <TouchableOpacity
+                        onPress={this.toggle}
+                        style={styles.button}
                     >
+                        <Image
+                            source={image}
+                            style={{ width: 25, height: 25 }}
+                        />
 
-                    </Header>
+                    </TouchableOpacity>
 
-                    <Structchart_comp />
-
-                </View>
-
-
-                <TouchableOpacity
-                    onPress={this.toggle}
-                    style={styles.button}
-                >
-                    <Image
-                        source={image}
-                        style={{ width: 25, height: 25 }}
-                    />
-
-                </TouchableOpacity>
-
-            </SideMenu>
-
+                </SideMenu>
 
         );
     }

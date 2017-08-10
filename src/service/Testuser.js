@@ -3,10 +3,12 @@ var mappingqcoachvshost = [
 		staffid : '2017021817_20170715_120',
 		host : [{
 			"hostid": "1050130955",
-			"hostname": "ทาเหนือวิทยา"
+			"hostname": "ทาเหนือวิทยา",
+			"province":"เชียงใหม่"
 		},{
 			"hostid": "1058420344",
-			"hostname": "บ้านวนาหลวง"
+			"hostname": "บ้านวนาหลวง",
+			"province":"แม่ฮ่องสอน"
 		}]
 	},
 	{

@@ -5,12 +5,13 @@ import {
     View,
     Image,
     TouchableOpacity,
+    ScrollView
 } from 'react-native';
 import SideMenu from 'react-native-side-menu';
 
 import Sidemenu_comp from './Sidemenu_Scene';
 
-import Attende_comp from '../component/Attende_comp';
+import School_comp from '../component/School_comp';
 
 import { Icon, Divider, Header } from 'react-native-elements';
 
@@ -70,38 +71,37 @@ export default class StructChart_Scene extends Component {
 
         return (
 
+                <SideMenu
+                    menu={menu}
+                    isOpen={this.state.isOpen}
+                    onChange={isOpen => this.updateMenuState(isOpen)}>
 
-            <SideMenu
-                menu={menu}
-                isOpen={this.state.isOpen}
-                onChange={isOpen => this.updateMenuState(isOpen)}>
+                    <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
 
-                <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
+                        <Header
+                            centerComponent={{ text: 'บันทึก' }}
+                            backgroundColor={'#fff'}
+                        >
 
-                    <Header
-                        centerComponent={{ text: 'รายละเอียดบันทึกการเข้าเรียน' }}
-                        backgroundColor={'#fff'}
+                        </Header>
+
+                        <School_comp />
+
+                    </View>
+
+
+                    <TouchableOpacity
+                        onPress={this.toggle}
+                        style={styles.button}
                     >
-                    </Header>
+                        <Image
+                            source={image}
+                            style={{ width: 25, height: 25 }}
+                        />
 
-                    <Attende_comp />
+                    </TouchableOpacity>
 
-                </View>
-
-
-                <TouchableOpacity
-                    onPress={this.toggle}
-                    style={styles.button}
-                >
-                    <Image
-                        source={image}
-                        style={{ width: 25, height: 25 }}
-                    />
-
-                </TouchableOpacity>
-
-            </SideMenu>
-
+                </SideMenu>
 
         );
     }

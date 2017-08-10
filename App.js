@@ -21,13 +21,10 @@ import PushNotification from 'react-native-push-notification';
 
 import Login_Scene from './src/scene/Login_Scene';
 import StructChart_Scene from './src/scene/StructChart_Scene';
-import Structdetail_Scene from './src/scene/Structdetail_Scene';
-import Attendetail_Scene from './src/scene/Attendetail_Scene';
-import Middetail_Scene from './src/scene/Middetail_Scene';
-import Finaldetail_Scene from './src/scene/Finaldetail_Scene'
 import Sidemenu_Scene from './src/scene/Sidemenu_Scene';
+import School_Scene from './src/scene/School_Scene';
 
-import PushController from './src/component/PushController'
+import PushController from './src/component/PushController';
 
 const reducerCreate = params => {
   const defaultReducer = Reducer(params);
@@ -97,7 +94,6 @@ export default class App extends React.Component {
             <Scene key="Login_Scene"
               component={Login_Scene}
               hideNavBar={true}
-              initial={true}
             />
           </Scene>
 
@@ -105,10 +101,16 @@ export default class App extends React.Component {
             <Scene key="StructChart_Scene"
               component={StructChart_Scene}
               title="Home"
-              renderBackButton={() => (null)}
               hideNavBar={true}
+              initial={true}
+
             />
-            <Scene key="Structdetail_Scene"
+
+            <Scene key = "School_Scene"
+            component = {School_Scene}
+            hideNavBar={true}
+            />
+          {/*   <Scene key="Structdetail_Scene"
               component={Structdetail_Scene}
               renderBackButton={() => (null)}
               hideNavBar={true}
@@ -127,7 +129,7 @@ export default class App extends React.Component {
               component={Finaldetail_Scene}
               renderBackButton={() => (null)}
               hideNavBar={true}
-            />
+            /> */}
           </Scene>
         </Scene>
 
