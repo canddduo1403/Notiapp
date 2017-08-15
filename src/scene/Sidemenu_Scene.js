@@ -52,7 +52,7 @@ export default function Sidemenu({ onItemSelected }) {
             activeOpacity={0.7}
           />
           <View style={{ flexDirection: 'column',justifyContent: 'space-between'}}>
-            <Text style={{ left: 20,top:20 }}>Username</Text>
+            <Text style={{ left: 20,top:20 }}>User</Text>
           </View>
         </View>
         <Divider style={{ right: 20, top: 50 }} />

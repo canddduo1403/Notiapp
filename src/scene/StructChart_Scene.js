@@ -39,69 +39,21 @@ const styles = StyleSheet.create({
 });
 
 export default class StructChart_Scene extends Component {
-    constructor(props) {
-        super(props);
-
-        this.toggle = this.toggle.bind(this);
-
-        this.state = {
-            isOpen: false,
-            selectedItem: 'About',
-        };
-    }
-
-    toggle() {
-        this.setState({
-            isOpen: !this.state.isOpen,
-        });
-    }
-
-    updateMenuState(isOpen) {
-        this.setState({ isOpen });
-    }
-
-    onMenuItemSelected = item =>
-        this.setState({
-            isOpen: false,
-            selectedItem: item,
-        });
 
     render() {
         const menu = <Sidemenu_comp onItemSelected={this.onMenuItemSelected} />;
 
         return (
 
-                <SideMenu
-                    menu={menu}
-                    isOpen={this.state.isOpen}
-                    onChange={isOpen => this.updateMenuState(isOpen)}>
+            <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
 
-                    <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
+                <Structchart_comp />
+                <Header
+                    centerComponent={{ text: 'Home' }}
+                    backgroundColor={'#fff'}
+                />
 
-                        <Header
-                            centerComponent={{ text: 'Home' }}
-                            backgroundColor={'#fff'}
-                        >
-
-                        </Header>
-
-                        <Structchart_comp />
-
-                    </View>
-
-
-                    <TouchableOpacity
-                        onPress={this.toggle}
-                        style={styles.button}
-                    >
-                        <Image
-                            source={image}
-                            style={{ width: 25, height: 25 }}
-                        />
-
-                    </TouchableOpacity>
-
-                </SideMenu>
+            </View>
 
         );
     }

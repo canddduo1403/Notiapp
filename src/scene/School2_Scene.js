@@ -11,13 +11,13 @@ import SideMenu from 'react-native-side-menu';
 
 import Sidemenu_comp from './Sidemenu_Scene';
 
-import School_comp from '../component/School_comp';
+import School2_comp from '../component/School2_comp';
 
 import { Icon, Divider, Header } from 'react-native-elements';
 
 import { Actions } from 'react-native-router-flux';
 
-const image = require('../../bg/ic_list_48pt.png');
+const image = require('../../bg/chevron-left.png');
 
 const styles = StyleSheet.create({
     button: {
@@ -46,7 +46,8 @@ export default class StructChart_Scene extends Component {
 
         this.state = {
             isOpen: false,
-            selectedItem: 'About',
+            doc: null
+
         };
     }
 
@@ -54,6 +55,7 @@ export default class StructChart_Scene extends Component {
         this.setState({
             isOpen: !this.state.isOpen,
         });
+        Actions.StructChart_Scene()
     }
 
     updateMenuState(isOpen) {
@@ -66,42 +68,44 @@ export default class StructChart_Scene extends Component {
             selectedItem: item,
         });
 
+
     render() {
         const menu = <Sidemenu_comp onItemSelected={this.onMenuItemSelected} />;
+        const docs = this.props.doc
 
         return (
 
-                <SideMenu
-                    menu={menu}
-                    isOpen={this.state.isOpen}
-                    onChange={isOpen => this.updateMenuState(isOpen)}>
+            /*   <SideMenu
+                  menu={menu}
+                  isOpen={this.state.isOpen}
+                  onChange={isOpen => this.updateMenuState(isOpen)}> */
 
-                    <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
+            <View style={{ backgroundColor: '#FFFFFF', flex: 1, padding: 30 }}>
 
-                        <Header
-                            centerComponent={{ text: 'บันทึก' }}
-                            backgroundColor={'#fff'}
-                        >
+             
 
-                        </Header>
+                <School2_comp sendDocData={docs} />
 
-                        <School_comp />
+                <Header
+                    centerComponent={{ text: 'ติดตามการทำงาน' }}
+                    backgroundColor={'#fff'}
+                />
 
-                    </View>
+                <TouchableOpacity
+                    onPress={this.toggle}
+                    //onPress={Actions.StructChart_Scene()}
+                    style={styles.button}
+                >
+                    <Image
+                        source={image}
+                        style={{ width: 25, height: 25 }}
+                    />
+
+                </TouchableOpacity>
+            </View>
 
 
-                    <TouchableOpacity
-                        onPress={this.toggle}
-                        style={styles.button}
-                    >
-                        <Image
-                            source={image}
-                            style={{ width: 25, height: 25 }}
-                        />
-
-                    </TouchableOpacity>
-
-                </SideMenu>
+            /* </SideMenu> */
 
         );
     }

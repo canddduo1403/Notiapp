@@ -22,7 +22,8 @@ import PushNotification from 'react-native-push-notification';
 import Login_Scene from './src/scene/Login_Scene';
 import StructChart_Scene from './src/scene/StructChart_Scene';
 import Sidemenu_Scene from './src/scene/Sidemenu_Scene';
-import School_Scene from './src/scene/School_Scene';
+import School_Scene from './src/scene/School1_Scene';
+import School2_Scene from './src/scene/School2_Scene'
 
 import PushController from './src/component/PushController';
 
@@ -48,7 +49,8 @@ export default class App extends React.Component {
     });
 
     this.state = {
-      second: 5,
+      date: null,
+      setD: null
     };
   }
 
@@ -74,8 +76,9 @@ export default class App extends React.Component {
 
       PushNotification.localNotificationSchedule({
         number: 0,
-        message: "การจัดทำแผนการสอน", // (required)
-        date: new Date(Date.now() + (60 * 1000))// in 60 secs
+        message: "มีการอัพเดต! การจัดทำแผนการสอน", // (required)
+        date: new Date(Date.now()+30 * 24 * 60 * 60 * 1000)
+        
       });
 
     }
@@ -106,30 +109,16 @@ export default class App extends React.Component {
 
             />
 
-            <Scene key = "School_Scene"
-            component = {School_Scene}
-            hideNavBar={true}
-            />
-          {/*   <Scene key="Structdetail_Scene"
-              component={Structdetail_Scene}
-              renderBackButton={() => (null)}
+            <Scene key="School1_Scene"
+              component={School_Scene}
               hideNavBar={true}
             />
-            <Scene key="Attendetail_Scene"
-              component={Attendetail_Scene}
-              renderBackButton={() => (null)}
+
+             <Scene key="School2_Scene"
+              component={School2_Scene}
               hideNavBar={true}
             />
-            <Scene key="Middetail_Scene"
-              component={Middetail_Scene}
-              renderBackButton={() => (null)}
-              hideNavBar={true}
-            />
-            <Scene key="Finaldetail_Scene"
-              component={Finaldetail_Scene}
-              renderBackButton={() => (null)}
-              hideNavBar={true}
-            /> */}
+
           </Scene>
         </Scene>
 

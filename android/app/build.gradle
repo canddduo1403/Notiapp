@@ -96,9 +96,9 @@ android {
     defaultConfig {
         applicationId "com.qinfoapp"
         minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 25
+        versionCode 6
+        versionName "6"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -147,9 +147,8 @@ signingConfig signingConfigs.release
 }
 
 dependencies {
-    compile project(':react-native-photo-view')
+    compile project(':RNMaterialKit')
     compile project(':react-native-share')
-    compile project(':react-native-linear-gradient')
     compile project(':react-native-push-notification')
     compile project(':react-native-svg')
     compile project(':react-native-vector-icons')

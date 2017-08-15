@@ -14,8 +14,7 @@ import PercentageCircle from 'react-native-percentage-circle';
 
 import { Card, ListItem, Button, ButtonGroup, Icon } from 'react-native-elements';
 
-const Window = Dimensions.get('window');
-
+const Window = Dimensions.get('window')
 
 export default class School_comp extends Component {
     constructor(props) {
@@ -31,10 +30,7 @@ export default class School_comp extends Component {
             struct: 0,
             attend: 0,
             mid: 0,
-            final: 0,
-
-            recived:0
-
+            final: 0
         }
     }
 
@@ -55,8 +51,6 @@ export default class School_comp extends Component {
         var mid = 0;
         var final = 0;
 
-        var recived = 0;
-        
         strucPer = Math.floor(((doc.subjectstructure / doc.full) * 100))
         attendPer = Math.floor(((doc.attend / doc.full) * 100))
         midPer = Math.floor(((doc.midterm / doc.full) * 100))
@@ -120,7 +114,6 @@ export default class School_comp extends Component {
                             <View style={styles.perContainer}>
                                 <Text style={styles.amountStyle}>คิดเป็นร้อยละ</Text>
                                 <PercentageCircle radius={35} percent={strucPer} color={"#3498db"} textStyle={{ fontSize: 18, color: 'red' }}></PercentageCircle>
-
                             </View>
 
                         </View>
@@ -205,6 +198,7 @@ export default class School_comp extends Component {
                             <View style={styles.perContainer}>
                                 <Text style={styles.amountStyle}>คิดเป็นร้อยละ</Text>
                                 <PercentageCircle radius={35} percent={finnalPer} color={"#3498db"} textStyle={{ fontSize: 18, color: 'red' }}></PercentageCircle>
+
                             </View>
 
                         </View>
@@ -226,7 +220,7 @@ const styles = StyleSheet.create({
     Container: {
         backgroundColor: '#DCDCDC',
         top: 20,
-        width: Window.width - 20,
+        width: Window.width - 5,
         height: 225,
     },
 
@@ -242,20 +236,18 @@ const styles = StyleSheet.create({
             },
 
             android: {
-                top: 5,
+                top: 0,
                 height: 100,
                 width: 100,
-                left:20,
+                left:20
             }
         }),
-
         borderLeftWidth: 2,
         borderColor: '#F0F8FF',
     },
 
     amountStyle: {
-        fontWeight: 'bold',
-        left: 5
+        fontWeight: 'bold'
     },
 
     percentStyle: {

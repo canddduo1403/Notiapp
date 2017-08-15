@@ -8,7 +8,8 @@ import {
   StatusBar,
   Alert,
   AsyncStorage,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Dimensions
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -22,6 +23,8 @@ import { Sae } from 'react-native-textinput-effects';
 import API from '../service/API';
 
 import LocalStorage from '../service/LocalStorage'
+
+const Window = Dimensions.get('window');
 
 export default class Logincomponent extends Component {
   constructor(props) {
@@ -89,7 +92,7 @@ export default class Logincomponent extends Component {
           <View style={{ padding: 16 }}>
 
             <Sae
-              style={{ backgroundColor: '#F8F8FF' }}
+              style={styles.inputContainer}
               label={'Username:'}
               iconClass={FontAwesomeIcon}
               iconName={'user-circle'}
@@ -103,7 +106,7 @@ export default class Logincomponent extends Component {
 
           <View style={{ padding: 16, alignContent: 'center' }}>
             <Sae
-              style={{ backgroundColor: '#F8F8FF' }}
+              style={styles.inputContainer}
               label={'Password:'}
               iconClass={FontAwesomeIcon}
               iconName={'key'}
@@ -125,11 +128,11 @@ export default class Logincomponent extends Component {
  */}
           <Button
             title='Login'
-            rised={true}
+            raised={true}
             icon={{ name: 'sign-in', type: 'font-awesome', color: "#5852AF" }}
-            backgroundColor="#F8F8FF"
-            //onPress={this._onLoginPress.bind(this)}
-            onPress = {()=>Actions.StructChart_Scene()}
+            backgroundColor="#FFF8DC"
+            onPress={this._onLoginPress.bind(this)}
+            //onPress = {()=>Actions.StructChart_Scene()}
             style={styles.buttonContainer}
             color="#5852AF"
             textStyle={{ fontWeight: 'bold', fontSize: 20 }}
@@ -146,7 +149,15 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    padding: 30
+    padding: 30,
+    alignItems:'center'
+  },
+
+  inputContainer:{
+    backgroundColor: '#FFF8DC',
+    borderBottomWidth:3,
+    borderRightWidth:3,
+    borderColor:'#D2B48C' 
   }
 
 
