@@ -8,6 +8,9 @@
   },
   "dependencies": {
     "@shoutem/ui": "^0.20.0",
+    "antd-mobile": "^1.6.3",
+    "apsl-react-native-button": "^3.1.0",
+    "moment": "^2.18.1",
     "native-base": "^2.3.1",
     "prop-types": "^15.5.10",
     "react": "16.0.0-alpha.12",
@@ -20,6 +23,7 @@
     "react-native-gifted-listview": "0.0.15",
     "react-native-highcharts": "^1.0.1",
     "react-native-keyboard-aware-scroll-view": "^0.3.0",
+    "react-native-linear-gradient": "^2.2.0",
     "react-native-loading-spinner-overlay": "^0.5.1",
     "react-native-material-design": "^0.3.7",
     "react-native-material-kit": "^0.4.1",
@@ -32,6 +36,7 @@
     "react-native-scrollable-tab-view": "^0.6.7",
     "react-native-side-menu": "^1.0.2",
     "react-native-snap-carousel": "^2.4.0",
+    "react-native-spinkit": "^1.1.1",
     "react-native-svg": "^5.3.2",
     "react-native-swiper-animated": "^1.2.5",
     "react-native-table-component": "^1.0.2",
@@ -43,6 +48,7 @@
   },
   "devDependencies": {
     "babel-jest": "20.0.3",
+    "babel-plugin-import": "^1.4.0",
     "babel-preset-react-native": "2.1.0",
     "jest": "20.0.4",
     "react-native-swipe-carousel": "^0.1.7",

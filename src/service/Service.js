@@ -34,7 +34,7 @@ const authen = function (credential, callback) {
 }
 
 const query = function (db, view, filter, callback) {
-    var url = db.indexOf('pp5summarynotification') === -1 ? ServiceUrl : ServiceUrlNew;
+    var url = db.indexOf('pp5summary') === -1 ? ServiceUrl : ServiceUrlNew;
     LocalStorage.get(Keys.KEY_TOKEN, (err, msg) => {
         if (err) return callback(err, msg);
         var options = _getOption('POST', msg);

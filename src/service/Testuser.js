@@ -80,6 +80,17 @@ var mappingqcoachvshost = [
 			"hostid": "1083400027",
 			"hostname": "วัดสุวรรณคีรีวงก์",
 			"province": "ภูเก็ต"
+		}, {
+			staffid: '2017021817_20170715_127',
+			host: [{
+				"hostid": "1084640551",
+				"hostname": "ปากแพรกวิทยาคม",
+				"province": "สุราษฎร์ธานี"
+			}, {
+				"hostid": "1083400027",
+				"hostname": "วัดสุวรรณคีรีวงก์",
+				"province": "ภูเก็ต"
+			}]
 		}]
 	}
 

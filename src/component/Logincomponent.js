@@ -131,8 +131,8 @@ export default class Logincomponent extends Component {
             raised={true}
             icon={{ name: 'sign-in', type: 'font-awesome', color: "#5852AF" }}
             backgroundColor="#FFF8DC"
-            onPress={this._onLoginPress.bind(this)}
-            //onPress = {()=>Actions.StructChart_Scene()}
+            //onPress={this._onLoginPress.bind(this)}
+            onPress = {()=>Actions.StructChart_Scene()}
             style={styles.buttonContainer}
             color="#5852AF"
             textStyle={{ fontWeight: 'bold', fontSize: 20 }}

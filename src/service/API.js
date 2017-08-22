@@ -48,6 +48,7 @@ module.exports = {
 
     login: login,
     loadUserInfo: loadUserInfo,
+    alert:alert,
 
     getCredential: LocalStorage.getCredential,
     setCredential: LocalStorage.setCredential,

@@ -13,19 +13,19 @@ import {
 
 import { width, height, totalSize } from 'react-native-dimension';
 
+import Calweek_comp from './Calweek_comp';
+
 import API from '../service/API';
 
 import Mapping from '../service/Testuser';
 
 import Documents from '../service/Documents';
 
-import ChartView from 'react-native-highcharts';
-
 import { Actions } from 'react-native-router-flux';
 
-import { Card, ListItem, Button, ButtonGroup, Icon } from 'react-native-elements'
+import { Card, ListItem, Button, ButtonGroup, Icon, Header } from 'react-native-elements';
 
-import Spinner from 'react-native-loading-spinner-overlay';
+import Spinner from 'react-native-spinkit';
 
 const Window = Dimensions.get('window');
 
@@ -44,6 +44,13 @@ export default class Structchart_comp extends Component {
             province: [],
             school: [],
             selectedIndex: 0,
+
+            isVisible: true,
+            index: 0,
+            types: ['Bounce'],
+            size: 100,
+            color: "#FFFFFF",
+
         };
         this.updateIndex = this.updateIndex.bind(this)
         this._calSchool = this._calSchool.bind(this)
@@ -56,6 +63,7 @@ export default class Structchart_comp extends Component {
 
     }
 
+
     _loadUserInfo() {
         API.getCredential((err, msg) => {
             if (err) return API.alert('ผิดพลาด', msg);
@@ -66,6 +74,16 @@ export default class Structchart_comp extends Component {
                     var mapping = null;
                     var doc = [];
                     var province = [];
+
+                    for (var k = 0; k < msg.roles.length; k++) {
+
+                        if (msg.roles[k] === "ผู้อำนวยการ") {
+                            Actions.Director_Scene();
+                            break;
+                        }
+
+                    }
+
                     for (var i = 0; i < Mapping.mappingqcoachvshost.length; i++) {
                         var tmp = Mapping.mappingqcoachvshost[i];
                         if (tmp.staffid == msg.profile.staffid) {
@@ -82,7 +100,9 @@ export default class Structchart_comp extends Component {
                                         }
                                     }
                                 })
-                                this.setState({ doc: doc, mapping: mapping })
+                                this.setState({
+                                    doc: doc, mapping: mapping,
+                                })
 
                             }
                             break;
@@ -118,7 +138,8 @@ export default class Structchart_comp extends Component {
             midPer: midPer,
             finalPer: finalPer,
             school: school,
-            province: province
+            province: province,
+            isVisible: !this.state.isVisible,
         })
 
     }
@@ -128,7 +149,9 @@ export default class Structchart_comp extends Component {
     }
 
 
+
     render() {
+
         const buttons = this.state.province
         const school = this.state.school
         const { selectedIndex } = this.state;
@@ -138,252 +161,238 @@ export default class Structchart_comp extends Component {
         const midPer = this.state.midPer;
         const finalPer = this.state.finalPer;
 
-        Keyboard.dismiss();
-        return (
-            <View>
-                <View style={{ marginTop: 80, padding: 0 }}>
-
-                    <ButtonGroup
-                        onPress={this.updateIndex}
-                        selectedIndex={selectedIndex}
-                        buttons={buttons}
-                        containerStyle={{ height: 50 }} />
-
+        Keyboard.dismiss()
+        if (this.state.isVisible) {
+            return (
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#808080'
+                }}>
+                    <Spinner isVisible={this.state.isVisible} size={this.state.size} type={this.state.types[this.state.index]} color={this.state.color} />
                 </View>
 
-                <View style={{ marginTop: 20 }}>
-                    {
-                        selectedIndex === 0 ?
-                            <TouchableOpacity
-                                style={styles.contentStyle}
-                                onPress={() => Actions.School1_Scene({
-                                    doc:
-                                    doc[0]
-                                })}
-                            >
-                                <View style={styles.schoolContainer}>
-                                    <Text style={{ fontWeight: 'bold' }}>{school[0]}</Text>
-                                </View>
-                                <View style={styles.scontentContainer}>
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>แผนการสอน: </Text>
-                                        {
-                                            structPer[0] >= 0 && structPer[0] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : structPer[0] >= 30 && structPer[0] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    : structPer[0] > 60 && structPer[0] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
+            );
+        }
+        else {
+            return (
 
-                                    </View>
+                <View>
+                    <Header
+                        centerComponent={{ text: 'Home' }}
+                        backgroundColor={'#FFFFFF'}
+                    />
+                    <View style={{ marginTop: 80, padding: 0 }}>
 
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>การเข้าเรียน: </Text>
-                                        {
-                                            attendPer[0] >= 0 && attendPer[0] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : attendPer[0] >= 30 && attendPer[0] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    : attendPer[0] > 60 && attendPer[0] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
-                                    </View>
-
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>ผลสอบกลางภาค: </Text>
-                                        {
-                                            midPer[0] >= 0 && midPer[0] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : midPer[0] >= 30 && midPer[0] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    : midPer[0] > 60 && midPer[0] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
-                                    </View>
-
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>ผลสอบปลายภาค: </Text>
-                                        {
-                                            finalPer[0] >= 0 && finalPer[0] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : finalPer[0] >= 30 && finalPer[0] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    : finalPer[0] > 60 && finalPer[0] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
-                                    </View>
-
-                                </View>
-
-                            </TouchableOpacity>
-
-                            : <TouchableOpacity
-                                style={styles.contentStyle}
-                                onPress={() => Actions.School2_Scene({
-                                    doc:
-                                    doc[1]
-                                })}
-                            >
-                                <View style={styles.schoolContainer}>
-                                    <Text style={{ fontWeight: 'bold' }}>{school[1]}</Text>
-                                </View>
-                                <View style={styles.scontentContainer}>
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>แผนการสอน: </Text>
-                                        {
-                                            structPer[1] >= 0 && structPer[1] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : structPer[1] >= 30 && structPer[1] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    :
-                                                    structPer[1] > 60 && structPer[1] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
-
-                                    </View>
-
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>การเข้าเรียน: </Text>
-                                        {
-                                            attendPer[1] >= 0 && attendPer[1] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : attendPer[1] >= 30 && attendPer[1] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    : attendPer[1] > 60 && attendPer[1] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
-                                    </View>
-
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>ผลสอบกลางภาค: </Text>
-                                        {
-                                            midPer[1] >= 0 && midPer[1] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : midPer[1] >= 30 && midPer[1] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    : midPer[1] > 60 && midPer[1] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
-                                    </View>
-
-                                    <View style={styles.iconContainer}>
-                                        <Text style={{ fontWeight: 'bold' }}>ผลสอบปลายภาค: </Text>
-                                        {
-                                            finalPer[1] >= 0 && finalPer[1] < 30 ?
-                                                <Icon name='emoticon-sad'
-                                                    type='material-community'
-                                                    color='#FF0000' />
-                                                : finalPer[1] >= 30 && finalPer[1] <= 60 ?
-                                                    <Icon name='emoticon-neutral'
-                                                        type='material-community'
-                                                        color='#FF8C00' />
-                                                    : finalPer[1] > 60 && finalPer[1] <= 100 ?
-                                                        <Icon name='emoticon-happy'
-                                                            type='material-community'
-                                                            color='#006400' />
-                                                        : null
-                                        }
-                                    </View>
-
-                                </View>
-
-                            </TouchableOpacity>
-                    }
-
-                    <View style={styles.iconDetail}>
-
-                        <Text>หมายเหตุ : ความหมายของสัญลักษณ์</Text>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Icon name='emoticon-sad'
-                                type='material-community'
-                                color='#FF0000'
-                                style={{ marginLeft: 10, marginTop: 10 }}
-                            />
-                            <Text style={{ marginLeft: 20 }}>: ร้อยละ 0-30 </Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Icon name='emoticon-neutral'
-                                type='material-community'
-                                color='#FF8C00'
-                                style={{ marginLeft: 10, marginTop: 10 }}
-                            />
-                            <Text style={{ marginLeft: 20 }}>: ร้อยละ 31-60 </Text>
-                        </View>
-
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                            <Icon name='emoticon-happy'
-                                type='material-community'
-                                color='#006400'
-                                style={{ marginLeft: 10, marginTop: 10 }}
-                            />
-                            <Text style={{ marginLeft: 20 }}>: ร้อยละ 61-100 </Text>
-
-                        </View>
-
+                        <ButtonGroup
+                            onPress={this.updateIndex}
+                            selectedIndex={selectedIndex}
+                            buttons={buttons}
+                            containerStyle={{ height: 50 }} />
 
                     </View>
 
+                    <View style={{ marginTop: 20,backgroundColor:'#FFFFFF'}}>
+                        {
+                            selectedIndex === 0 ?
+                                <TouchableOpacity
+                                    style={styles.contentStyle}
+                                    onPress={() => Actions.School1_Scene({
+                                        doc:
+                                        doc[0]
+                                    })}
+                                >
+                                    <View style={styles.schoolContainer}>
+                                        <Text style={{ fontWeight: 'bold' }}>{school[0]}</Text>
+                                    </View>
+                                    <View style={styles.scontentContainer}>
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>แผนการสอน: </Text>
+                                            {
+                                                structPer[0] >= 0 && structPer[0] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : structPer[0] >= 30 && structPer[0] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        : structPer[0] > 60 && structPer[0] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+
+                                        </View>
+
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>การเข้าเรียน: </Text>
+                                            {
+                                                attendPer[0] >= 0 && attendPer[0] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : attendPer[0] >= 30 && attendPer[0] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        : attendPer[0] > 60 && attendPer[0] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+                                        </View>
+
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>ผลสอบกลางภาค: </Text>
+                                            {
+                                                midPer[0] >= 0 && midPer[0] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : midPer[0] >= 30 && midPer[0] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        : midPer[0] > 60 && midPer[0] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+                                        </View>
+
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>ผลสอบปลายภาค: </Text>
+                                            {
+                                                finalPer[0] >= 0 && finalPer[0] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : finalPer[0] >= 30 && finalPer[0] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        : finalPer[0] > 60 && finalPer[0] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+                                        </View>
+                                        {/*progess*/}
+                                        <Calweek_comp docs={doc} />
+
+                                    </View>
+
+
+                                </TouchableOpacity>
+
+                                : <TouchableOpacity
+                                    style={styles.contentStyle}
+                                    onPress={() => Actions.School2_Scene({
+                                        doc:
+                                        doc[1]
+                                    })}
+                                >
+                                    <View style={styles.schoolContainer}>
+                                        <Text style={{ fontWeight: 'bold' }}>{school[1]}</Text>
+                                    </View>
+                                    <View style={styles.scontentContainer}>
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>แผนการสอน: </Text>
+                                            {
+                                                structPer[1] >= 0 && structPer[1] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : structPer[1] >= 30 && structPer[1] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        :
+                                                        structPer[1] > 60 && structPer[1] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+
+                                        </View>
+
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>การเข้าเรียน: </Text>
+                                            {
+                                                attendPer[1] >= 0 && attendPer[1] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : attendPer[1] >= 30 && attendPer[1] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        : attendPer[1] > 60 && attendPer[1] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+                                        </View>
+
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>ผลสอบกลางภาค: </Text>
+                                            {
+                                                midPer[1] >= 0 && midPer[1] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : midPer[1] >= 30 && midPer[1] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        : midPer[1] > 60 && midPer[1] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+                                        </View>
+
+                                        <View style={styles.iconContainer}>
+                                            <Text style={{ fontWeight: 'bold' }}>ผลสอบปลายภาค: </Text>
+                                            {
+                                                finalPer[1] >= 0 && finalPer[1] < 30 ?
+                                                    <Icon name='emoticon-sad'
+                                                        type='material-community'
+                                                        color='#FF0000' />
+                                                    : finalPer[1] >= 30 && finalPer[1] <= 60 ?
+                                                        <Icon name='emoticon-neutral'
+                                                            type='material-community'
+                                                            color='#FF8C00' />
+                                                        : finalPer[1] > 60 && finalPer[1] <= 100 ?
+                                                            <Icon name='emoticon-happy'
+                                                                type='material-community'
+                                                                color='#006400' />
+                                                            : null
+                                            }
+                                        </View>
+
+                                    </View>
+
+                                </TouchableOpacity>
+                        }
+
+                    </View>
+
+
                 </View>
+            );
 
+        }
 
-            </View>
-
-
-        );
     }
 }
 
@@ -394,10 +403,13 @@ const styles = StyleSheet.create({
             ios: {
                 width: Window.length - 60,
                 height: Window.height - 500,
+                padding: 10
             },
             android: {
                 width: width(85),
-                height: height(30)
+                height: height(30),
+                padding: 10
+
             },
 
         }),
