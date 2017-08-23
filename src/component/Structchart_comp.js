@@ -294,7 +294,7 @@ export default class Structchart_comp extends Component {
 
                                     </TouchableOpacity>
 
-                                    <View style={styles.progressContainer}>
+                                    <View>
                                         <Calweek_comp docs={doc[0]} />
                                     </View>
 

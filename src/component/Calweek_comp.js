@@ -22,12 +22,15 @@ export default class Calweek_comp extends Component {
             doc: null,
             weekArray: [],
             dataSum: [],
+            dataSumLastWeek: [],
             maxWeek: 0,
 
             perStruct: 0,
             perAttend: 0,
             perScoreRatio: 0,
             sumdata: 0,
+
+            lastPerSumdata: 0,
 
             isLoading: true,
 
@@ -46,7 +49,7 @@ export default class Calweek_comp extends Component {
         var doc = this.props.docs;
         var weekArray = [];
         var maxWeek = 0;
-       Documents.getWeekdata(doc.hostid, (err, msg) => {
+        Documents.getWeekdata(doc.hostid, (err, msg) => {
             if (err)
                 return API.alert('ผิดพลาด', msg);
             else {
@@ -69,9 +72,44 @@ export default class Calweek_comp extends Component {
 
         var dataSum = [];
 
-        Documents.getWeekDoc(hostid,maxWeek-1,maxWeek,(err,msg)=>{
-            
+        var lastFull = 0;
+        var lastSumstruct = 0;
+        var lastSumRatio = 0;
+        var lastSumAttend = 0;
+
+        var lastSumPer = 0;
+
+        Documents.getWeekDoc(hostid, maxWeek - 1, maxWeek, (err, msg) => {
+
+            if (err) return API.alert('ผิดพลาด', msg);
+
+            else {
+                for (var i = 0; i < msg.length; i++) {
+                    if (hostid == msg[i].value.doc.hostid) {
+                        for (var j = 0; j < msg[i].value.doc.datasummary.length; j++) {
+                            dataSumLastWeek.push(msg[i].value.doc.datasummary[j])
+                        }
+                    }
+                }
+
+                for (var k = 0; k < (dataSumLastWeek.length) / 2; k++) {
+                    lastSumstruct += dataSumLastWeek[k][1];
+                    lastSumRatio += dataSumLastWeek[k][2];
+                    lastSumAttend += dataSumLastWeek[k][3];
+                    lastFull += dataSumLastWeek[k][4];
+                }
+
+                var lastPerStruct = Math.floor(((lastSumstruct / lastFull) * 100));
+                var lastPerRatio = Math.floor(((lastSumRatio / lastFull) * 100));
+                var lastPerAttend = Math.floor(((lastSumAttend / lastFull) * 100));
+
+                var lastPerSumdata = Math.floor(((lastPerStruct + lastPerRatio + lastPerAttend) / 300) * 100)
+
+                this.setState({ lastPerSumdata: lastPerSumdata })
+            }
+
         })
+
 
         Documents.getWeekDoc(hostid, maxWeek, maxWeek + 1, (err, msg) => {
 
@@ -84,12 +122,10 @@ export default class Calweek_comp extends Component {
                             dataSum.push(msg[i].value.doc.datasummary[j])
                         }
                     }
-
                 }
                 this._calProgress(dataSum)
             }
         })
-
     }
 
     _calProgress(dataSum) {
@@ -109,7 +145,7 @@ export default class Calweek_comp extends Component {
         var perScoreRatio = Math.floor((sumScoreRatio * 100) / full);
         var perAttend = Math.floor((sumAttend * 100) / full);
 
-        var sumdata = Math.floor(((perStruct + perScoreRatio + perAttend) / (full * 3) * 100))
+        var sumdata = Math.floor(((perStruct + perScoreRatio + perAttend) / 300) * 100)
 
         this.setState({
             perStruct: perStruct,
@@ -130,6 +166,7 @@ export default class Calweek_comp extends Component {
             );
         }
         else {
+            const lastWeek = this.state.lastPerSumdata;
             return (
                 <View>
                     <View style={styles.header}>
@@ -147,16 +184,27 @@ export default class Calweek_comp extends Component {
                         <View style={{ width: 80, alignItems: 'center' }}>
                             <Text>{this.state.maxWeek}</Text>
                         </View>
-                        <View style={{ marginLeft: 70, alignItems: 'center' }}>
-                            <Icon name='emoticon-happy'
+                        <View style={{ marginLeft: 65, alignItems: 'center' }}>
+                            <Icon name='emoticon-neutral'
                                 type='material-community'
-                                color='#006400' />
+                                color='#FF8C00' />
                             <Text style={{ marginLeft: 5 }}>({this.state.sumdata} %)</Text>
                         </View>
-                        <View style={{ marginLeft: 110, alignItems: 'center' }}>
-                            <Icon name='long-arrow-up'
-                                type='font-awesome'
-                                color='#32CD32' />
+                        <View style={{ width: Window.width / 3, marginLeft: 45 }}>
+                            {
+                                lastWeek == this.state.sumdata ?
+                                    <Icon name='window-minimiz'
+                                        type='material-community'
+                                        color='#000000' />
+                                    :
+                                    <View style={{ alignItems: 'center' }}>
+                                        <Icon name='long-arrow-up'
+                                            type='font-awesome'
+                                            color='#32CD32' />
+                                        <Text style={{marginTop:10}}>ข้อมูลเพิ่มขึ้นจากสัปดาห์ที่แล้ว : {this.state.sumdata - lastWeek} %</Text>
+                                        
+                                    </View>
+                            }
                         </View>
                     </View>
                 </View>
@@ -191,7 +239,7 @@ const styles = StyleSheet.create({
     bodyContainer: {
         padding: 10,
         marginTop: 10,
-        height: 70,
+        height: 100,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#FAEBD7',
@@ -204,6 +252,7 @@ const styles = StyleSheet.create({
     },
 
     textHeaderStyle: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize: 18
     }
 })
