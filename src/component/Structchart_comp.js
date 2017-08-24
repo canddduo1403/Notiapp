@@ -33,34 +33,16 @@ export default class Structchart_comp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            profile: null,
-            mapping: null,
-            doc: [],
-            time: [],
-            structPer: [],
-            attendPer: [],
-            midPer: [],
-            finalPer: [],
             province: [],
-            school: [],
-            selectedIndex: 0,
-
-            isVisible: true,
-            index: 0,
-            types: ['Bounce'],
-            size: 100,
-            color: "#FFFFFF",
-
+            res: [],
+            isLoading: true,
         };
-        this.updateIndex = this.updateIndex.bind(this)
-        this._calSchool = this._calSchool.bind(this)
     }
 
     componentDidMount() {
         API.getUser((err, msg) => {
             this._loadUserInfo();
         });
-
     }
 
 
@@ -72,8 +54,8 @@ export default class Structchart_comp extends Component {
                     return API.alert('ผิดพลาด', msg);
                 } else {
                     var mapping = null;
-                    var doc = [];
                     var province = [];
+                    var hostid = [];
 
                     for (var k = 0; k < msg.roles.length; k++) {
 
@@ -89,388 +71,122 @@ export default class Structchart_comp extends Component {
                         if (tmp.staffid == msg.profile.staffid) {
                             mapping = tmp;
                             for (var j = 0; j < mapping.host.length; j++) {
-                                Documents.getData(mapping.host[j].hostid, (err, msg) => {
-                                    doc.push(msg[0].value.doc)
-                                    if (doc.length > 1) {
-                                        if (doc[0].hostid < doc[1].hostid) {
-                                            this._calSchool(doc, mapping)
-                                        }
-                                        else if (doc[0].hostid > doc[1].hostid) {
-                                            this._loadUserInfo()
-                                        }
-                                    }
-                                })
-                                this.setState({
-                                    doc: doc, mapping: mapping,
-                                })
-
+                                hostid.push(mapping.host[j].hostid)
+                                province.push(mapping.host[j].province)
                             }
                             break;
                         }
-                    };
+                    }
+                    this.setState({ province: province })
+                    this._getWeek(hostid)
                 }
+
             });
         });
     }
 
-    _calSchool(doc, mapping) {
-
-        var structPer = [];
-        var attendPer = [];
-        var midPer = [];
-        var finalPer = [];
-
-        var school = [];
-        var province = [];
-
-        for (var i = 0; i < doc.length; i++) {
-            school.push(doc[i].hostname)
-            structPer.push(Math.floor((doc[i].subjectstructure / doc[i].full) * 100))
-            attendPer.push(Math.floor((doc[i].attend / doc[i].full) * 100))
-            midPer.push(Math.floor((doc[i].midterm / doc[i].full) * 100))
-            finalPer.push(Math.floor((doc[i].final / doc[i].full) * 100))
-            province.push(mapping.host[i].province)
+    _getWeek(hostid) {
+        var week = []
+        var hostdata = []
+        var maxWeek = 0;
+        var docWeekdata = []
+        for (let i = 0; i < hostid.length; i++) {
+            Documents.getWeek(hostid[i], (err, msg) => {
+                if (err) return API.alert('ผิดพลาด', msg);
+                else if (msg.length > 0) {
+                    hostdata.push(msg)
+                    for (let j = 0; j < hostdata.length; j++) {
+                        for (let k = 0; k < hostdata[j].length; k++) {
+                            week.push(hostdata[j][k].value.doc.week)
+                        }
+                    }
+                }
+                maxWeek = Math.max(...week)
+                this._getWeekDoc(hostid, maxWeek)
+            })
         }
-
-        this.setState({
-            structPer: structPer,
-            attendPer: attendPer,
-            midPer: midPer,
-            finalPer: finalPer,
-            school: school,
-            province: province,
-            isVisible: !this.state.isVisible,
-        })
-
     }
 
-    updateIndex(selectedIndex) {
-        this.setState({ selectedIndex })
+    _getWeekDoc(hostid, maxWeek) {
+        const doc = [];
+        var full = 0;
+        var struct = 0;
+        var sRatio = 0;
+        var attend = 0;
+        const res = [];
+        const resObj = {};
+
+        for (let i = 0; i < hostid.length; i++) {
+            Documents.getWeekDoc(hostid[i], maxWeek, maxWeek + 1, (err, msg) => {
+                if (err) return API.alert('ผิดพลาด', msg);
+                else if (msg.length > 0) {
+                    if (hostid[i] == msg[i].value.doc.hostid) {
+                        doc.push(msg[i].value.doc)
+                        doc.sort((a, b) => {
+                            return a.hostid - b.hostid
+                        })
+                    }
+                }
+                if (doc.length == 2) {
+                    this._calData(doc)
+                }
+
+            })
+
+        }
+    }
+
+    _calData(doc) {
+
+        var province = this.state.province
+        var res = [];
+        for (let i = 0; i < doc.length; i++) {
+            var st = 0;
+            var ratio = 0;
+            var at = 0;
+            var full = 0;
+            for (let j = 0; j < doc[i].datasummary.length; j++) {
+                st += doc[i].datasummary[j][1]
+                ratio += doc[i].datasummary[j][2]
+                at += doc[i].datasummary[j][3]
+                full += doc[i].datasummary[j][4]
+            }
+            res.push({
+                'hostname': doc[i].hostname,
+                'struct': st,
+                'ratio': ratio,
+                'attend': at,
+                'full': full,
+                'province': province[i]
+            })
+        }
+        console.log(res)
+        this.setState({ res: res })
     }
 
 
 
     render() {
 
-        const buttons = this.state.province
-        const school = this.state.school
-        const { selectedIndex } = this.state;
-        const doc = this.state.doc;
-        const structPer = this.state.structPer;
-        const attendPer = this.state.attendPer;
-        const midPer = this.state.midPer;
-        const finalPer = this.state.finalPer;
 
         Keyboard.dismiss()
-        if (this.state.isVisible) {
-            return (
-                <View style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#808080'
-                }}>
-                    <Spinner isVisible={this.state.isVisible} size={this.state.size} type={this.state.types[this.state.index]} color={this.state.color} />
-                </View>
+        return (
 
-            );
-        }
-        else {
-            return (
-
-                <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-                    <Header
-                        centerComponent={{ text: 'Home' }}
-                        backgroundColor={'#FFFFFF'}
-                    />
-                    <View style={{ marginTop: 80, padding: 0 }}>
-
-                        <ButtonGroup
-                            onPress={this.updateIndex}
-                            selectedIndex={selectedIndex}
-                            buttons={buttons}
-                            containerStyle={{ height: 50 }} />
-
-                    </View>
-
-                    <View style={{ marginTop: 20, backgroundColor: '#FFFFFF' }}>
-                        {
-                            selectedIndex === 0 ?
-                                <View>
-                                    <TouchableOpacity
-                                        style={styles.contentStyle}
-                                        onPress={() => Actions.School1_Scene({
-                                            doc:
-                                            doc[0]
-                                        })}
-                                    >
-                                        <View style={styles.schoolContainer}>
-                                            <Text style={{ fontWeight: 'bold' }}>{school[0]}</Text>
-                                        </View>
-                                        <View style={styles.scontentContainer}>
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>แผนการสอน: </Text>
-                                                {
-                                                    structPer[0] >= 0 && structPer[0] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : structPer[0] >= 30 && structPer[0] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            : structPer[0] > 60 && structPer[0] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-
-                                                <Text style={{ padding: 5 }}> ({structPer[0]}%)</Text>
-
-                                            </View>
-
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>การเข้าเรียน: </Text>
-                                                {
-                                                    attendPer[0] >= 0 && attendPer[0] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : attendPer[0] >= 30 && attendPer[0] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            : attendPer[0] > 60 && attendPer[0] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-                                                <Text style={{ padding: 5 }}>({attendPer[0]}%)</Text>
-                                            </View>
-
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>ผลสอบกลางภาค: </Text>
-                                                {
-                                                    midPer[0] >= 0 && midPer[0] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : midPer[0] >= 30 && midPer[0] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            : midPer[0] > 60 && midPer[0] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-                                                <Text style={{ padding: 5 }}>({midPer[0]}%)</Text>
-                                            </View>
-
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>ผลสอบปลายภาค: </Text>
-                                                {
-                                                    finalPer[0] >= 0 && finalPer[0] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : finalPer[0] >= 30 && finalPer[0] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            : finalPer[0] > 60 && finalPer[0] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-                                                <Text style={{ padding: 5 }}>({finalPer[0]}%)</Text>
-                                            </View>
-
-                                        </View>
-
-                                    </TouchableOpacity>
-
-                                    <View>
-                                        <Calweek_comp docs={doc[0]} />
-                                    </View>
-
-                                </View>
+            <View style={styles.screenStyle}>
 
 
-                                :
-
-                                <View>
-                                    <TouchableOpacity
-                                        style={styles.contentStyle}
-                                        onPress={() => Actions.School2_Scene({
-                                            doc:
-                                            doc[1]
-                                        })}
-                                    >
-                                        <View style={styles.schoolContainer}>
-                                            <Text style={{ fontWeight: 'bold' }}>{school[1]}</Text>
-                                        </View>
-                                        <View style={styles.scontentContainer}>
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>แผนการสอน: </Text>
-                                                {
-                                                    structPer[1] >= 0 && structPer[1] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : structPer[1] >= 30 && structPer[1] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            :
-                                                            structPer[1] > 60 && structPer[1] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-                                                <Text style={{ padding: 5 }}>({structPer[1]}%)</Text>
-
-                                            </View>
-
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>การเข้าเรียน: </Text>
-                                                {
-                                                    attendPer[1] >= 0 && attendPer[1] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : attendPer[1] >= 30 && attendPer[1] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            : attendPer[1] > 60 && attendPer[1] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-                                                <Text style={{ padding: 5 }}>({attendPer[1]}%)</Text>
-
-                                            </View>
-
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>ผลสอบกลางภาค: </Text>
-                                                {
-                                                    midPer[1] >= 0 && midPer[1] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : midPer[1] >= 30 && midPer[1] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            : midPer[1] > 60 && midPer[1] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-                                                <Text style={{ padding: 5 }}>({midPer[1]}%)</Text>
-
-                                            </View>
-
-                                            <View style={styles.iconContainer}>
-                                                <Text style={{ fontWeight: 'bold' }}>ผลสอบปลายภาค: </Text>
-                                                {
-                                                    finalPer[1] >= 0 && finalPer[1] < 30 ?
-                                                        <Icon name='emoticon-sad'
-                                                            type='material-community'
-                                                            color='#FF0000' />
-                                                        : finalPer[1] >= 30 && finalPer[1] <= 60 ?
-                                                            <Icon name='emoticon-neutral'
-                                                                type='material-community'
-                                                                color='#FF8C00' />
-                                                            : finalPer[1] > 60 && finalPer[1] <= 100 ?
-                                                                <Icon name='emoticon-happy'
-                                                                    type='material-community'
-                                                                    color='#006400' />
-                                                                : null
-                                                }
-                                                <Text style={{ padding: 5 }}>({finalPer[1]}%)</Text>
-                                            </View>
-
-                                        </View>
-
-                                    </TouchableOpacity>
-                            
-                                </View>
-                        }
-
-                    </View>
-
-
-                </View>
-            );
-
-        }
+            </View>
+        );
 
     }
+
 }
 
 const styles = StyleSheet.create({
 
-    contentStyle: {
-        ...Platform.select({
-            ios: {
-                width: Window.length - 60,
-                height: Window.height - 500,
-                padding: 10,
-                justifyContent: 'flex-start'
-            },
-            android: {
-                width: width(85),
-                height: height(30),
-                padding: 10
+    screenStyle: {
+        flex: 1,
+        backgroundColor: '#FFEBCD'
+    }
 
-            },
-
-        }),
-
-        flexDirection: 'row',
-        backgroundColor: '#FFFFF0'
-    },
-
-    schoolContainer: {
-        width: width(35),
-        backgroundColor: '#FFE4B5',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    scontentContainer: {
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: 10
-    },
-
-    iconContainer: {
-        flexDirection: 'row'
-    },
-
-    iconDetail: {
-        width: width(60),
-        height: height(10),
-        ...Platform.select({
-            ios: {
-                marginTop: 100,
-            },
-            android: {
-                marginTop: 30,
-            }
-
-        }),
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start'
-    },
 });

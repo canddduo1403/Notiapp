@@ -23,8 +23,6 @@ import Login_Scene from './src/scene/Login_Scene';
 import Director_Scene from './src/scene/Director_Scene'
 import Structchart_comp from './src/component/Structchart_comp';
 import Sidemenu_Scene from './src/scene/Sidemenu_Scene';
-import School_Scene from './src/scene/School1_Scene';
-import School2_Scene from './src/scene/School2_Scene'
 
 import PushController from './src/component/PushController';
 
@@ -98,29 +96,13 @@ export default class App extends React.Component {
             <Scene key="Login_Scene"
               component={Login_Scene}
               hideNavBar={true}
-              initial={true}
             />
             <Scene key="StructChart_Scene"
               component={Structchart_comp}
               title="Home"
               hideNavBar={true}
               type={ActionConst.REPLACE}
-            />
-
-            <Scene key="Director_Scene"
-            component={Director_Scene}
-            hideNavBar={true}
-            type={ActionConst.REPLACE}
-            />
-
-            <Scene key="School1_Scene"
-              component={School_Scene}
-              hideNavBar={true}
-            />
-
-            <Scene key="School2_Scene"
-              component={School2_Scene}
-              hideNavBar={true}
+              initial={true}
             />
 
           </Scene>

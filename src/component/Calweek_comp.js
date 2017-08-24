@@ -171,6 +171,9 @@ export default class Calweek_comp extends Component {
                 <View>
                     <View style={styles.header}>
                         <View style={styles.boxContainer}>
+                            <Text style={styles.textHeaderStyle}>โรงเรียน</Text>
+                        </View>
+                        <View style={styles.boxContainer}>
                             <Text style={styles.textHeaderStyle}>สัปดาห์ที่</Text>
                         </View>
                         <View style={styles.boxContainer}>
@@ -180,35 +183,7 @@ export default class Calweek_comp extends Component {
                             <Text style={styles.textHeaderStyle}>หมายเหตุ</Text>
                         </View>
                     </View>
-                    <View style={styles.bodyContainer}>
-                        <View style={{ width: 80, alignItems: 'center' }}>
-                            <Text>{this.state.maxWeek}</Text>
-                        </View>
-                        <View style={{ marginLeft: 65, alignItems: 'center' }}>
-                            <Icon name='emoticon-neutral'
-                                type='material-community'
-                                color='#FF8C00' />
-                            <Text style={{ marginLeft: 5 }}>({this.state.sumdata} %)</Text>
-                        </View>
-                        <View style={{ width: Window.width / 3, marginLeft: 45 }}>
-                            {
-                                lastWeek == this.state.sumdata ?
-                                    <Icon name='window-minimiz'
-                                        type='material-community'
-                                        color='#000000' />
-                                    :
-                                    <View style={{ alignItems: 'center' }}>
-                                        <Icon name='long-arrow-up'
-                                            type='font-awesome'
-                                            color='#32CD32' />
-                                        <Text style={{marginTop:10}}>ข้อมูลเพิ่มขึ้นจากสัปดาห์ที่แล้ว : {this.state.sumdata - lastWeek} %</Text>
-                                        
-                                    </View>
-                            }
-                        </View>
-                    </View>
                 </View>
-
             );
 
         }
@@ -219,7 +194,7 @@ export default class Calweek_comp extends Component {
 const styles = StyleSheet.create({
     header: {
         height: 80,
-        marginTop: 50,
+        marginTop: 10,
         backgroundColor: '#F4A460',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -231,7 +206,7 @@ const styles = StyleSheet.create({
     boxContainer: {
         padding: 3,
         height: 50,
-        width: Window.length / 3,
+        width: Window.length / 4,
         alignItems: 'center',
         marginTop: 20
     },
@@ -246,13 +221,13 @@ const styles = StyleSheet.create({
     },
 
     bodyBoxContainer: {
-        width: Window.length / 3,
+        width: Window.length / 4,
         justifyContent: 'space-between',
         alignItems: 'center',
     },
 
     textHeaderStyle: {
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: 15
     }
 })
