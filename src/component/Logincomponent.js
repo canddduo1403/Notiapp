@@ -54,7 +54,7 @@ export default class Logincomponent extends Component {
       API.login(credential, (err, msg) => {
         if (err) return Alert.alert('ผิดพลาด', 'ไม่สามารถเชื่อมต่อเครือข่ายได้', [{ text: 'ตกลง' }]);
         else {
-          Actions.StructChart_Scene();
+          Actions.Schoolist_comp();
         }
       });
     }
@@ -131,8 +131,8 @@ export default class Logincomponent extends Component {
             raised={true}
             icon={{ name: 'sign-in', type: 'font-awesome', color: "#5852AF" }}
             backgroundColor="#FFF8DC"
-            //onPress={this._onLoginPress.bind(this)}
-            onPress = {()=>Actions.StructChart_Scene()}
+            onPress={this._onLoginPress.bind(this)}
+            //onPress = {()=>Actions.Schoolist_comp()}
             style={styles.buttonContainer}
             color="#5852AF"
             textStyle={{ fontWeight: 'bold', fontSize: 20 }}

@@ -21,7 +21,8 @@ import PushNotification from 'react-native-push-notification';
 
 import Login_Scene from './src/scene/Login_Scene';
 import Director_Scene from './src/scene/Director_Scene'
-import Structchart_comp from './src/component/Structchart_comp';
+import Schoolist_comp from './src/component/Schoolist_comp';
+import Subdetail_comp from './src/component/Subdetail_comp';
 import Sidemenu_Scene from './src/scene/Sidemenu_Scene';
 
 import PushController from './src/component/PushController';
@@ -97,12 +98,16 @@ export default class App extends React.Component {
               component={Login_Scene}
               hideNavBar={true}
             />
-            <Scene key="StructChart_Scene"
-              component={Structchart_comp}
-              title="Home"
+            <Scene key="Schoolist_comp"
+              component={Schoolist_comp}
+              hideNavBar={true}
+              initial={true}
+              type={ActionConst.REPLACE}
+            />
+            <Scene key="Subdetail_comp"
+              component={Subdetail_comp}
               hideNavBar={true}
               type={ActionConst.REPLACE}
-              initial={true}
             />
 
           </Scene>
