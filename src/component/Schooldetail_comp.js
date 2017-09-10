@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     Dimensions
 } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Card, Button, Icon } from 'react-native-elements';
 
 import { Actions } from 'react-native-router-flux';
 
@@ -59,7 +59,7 @@ export default class School_Detail extends Component {
                                 </View>
 
                                 :
-                                <View>
+                                <View style={{ flexDirection: 'row'}}>
                                     <Icon
                                         name='minus'
                                         type='material-community'

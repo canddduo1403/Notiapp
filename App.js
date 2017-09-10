@@ -21,6 +21,7 @@ import PushNotification from 'react-native-push-notification';
 
 import Login_Scene from './src/scene/Login_Scene';
 import Director_Scene from './src/scene/Director_Scene'
+import Tab_Scene from './src/scene/Tab';
 import Schoolist_comp from './src/component/Schoolist_comp';
 import Subdetail_comp from './src/component/Subdetail_comp';
 import Sidemenu_Scene from './src/scene/Sidemenu_Scene';
@@ -97,11 +98,11 @@ export default class App extends React.Component {
             <Scene key="Login_Scene"
               component={Login_Scene}
               hideNavBar={true}
+              initial={true}
             />
             <Scene key="Schoolist_comp"
               component={Schoolist_comp}
               hideNavBar={true}
-              initial={true}
               type={ActionConst.REPLACE}
             />
             <Scene key="Subdetail_comp"
@@ -110,6 +111,17 @@ export default class App extends React.Component {
               type={ActionConst.REPLACE}
             />
 
+            <Scene key="Director_Scene"
+              component={Director_Scene}
+              hideNavBar={true}
+              type={ActionConst.REPLACE}
+            />
+
+            <Scene key="Tab_Scene"
+              component={Tab_Scene}
+              hideNavBar={true}
+              type={ActionConst.REPLACE}
+            />
           </Scene>
         </Scene>
 

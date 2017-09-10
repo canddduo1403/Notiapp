@@ -68,7 +68,7 @@ export default class Schoolist extends Component {
                     for (var k = 0; k < msg.roles.length; k++) {
 
                         if (msg.roles[k] === "ผู้อำนวยการ") {
-                            Actions.Director_Scene();
+                            Actions.Director_Scene({ data: msg });
                             break;
                         }
 
@@ -143,8 +143,7 @@ export default class Schoolist extends Component {
                         }
 
                     }
-                    console.log(lastWeekprogress)
-                    if (lastWeekprogress.length == 2) {
+                    if (lastWeekprogress.length > 0) {
                         this.setState({ maxWeek: maxWeek, lastWeekprogress: lastWeekprogress })
                         this._getWeekDoc(hostid, maxWeek)
                     }
@@ -228,9 +227,6 @@ export default class Schoolist extends Component {
 
     render() {
 
-        console.log(this.state.isLoading)
-
-
         Keyboard.dismiss()
         if (this.state.isLoading) {
             return (
@@ -259,6 +255,8 @@ export default class Schoolist extends Component {
                 <ScrollView style={{ marginTop: 100 }}>
                     {this.renderSchoolList()}
                 </ScrollView>
+
+
             </View>
         );
 
