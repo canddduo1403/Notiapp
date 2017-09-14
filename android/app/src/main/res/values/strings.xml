@@ -1,3 +1,7 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">Q-Tracking</string>
+=======
+    <string name="app_name">QinfoApp</string>
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
 </resources>

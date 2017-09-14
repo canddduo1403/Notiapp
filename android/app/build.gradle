@@ -90,19 +90,31 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
+<<<<<<< HEAD
     compileSdkVersion 25
     buildToolsVersion "25"
+=======
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
 
     defaultConfig {
         applicationId "com.qinfoapp"
         minSdkVersion 16
+<<<<<<< HEAD
         targetSdkVersion 25
         versionCode 6
         versionName "6"
+=======
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+<<<<<<< HEAD
 
 signingConfigs {
 release {
@@ -115,6 +127,8 @@ keyPassword MYAPP_RELEASE_KEY_PASSWORD
 }
 }
 
+=======
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
     splits {
         abi {
             reset()
@@ -127,8 +141,11 @@ keyPassword MYAPP_RELEASE_KEY_PASSWORD
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+<<<<<<< HEAD
 signingConfig signingConfigs.release
 
+=======
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
         }
     }
     // applicationVariants are e.g. debug, release
@@ -147,6 +164,7 @@ signingConfig signingConfigs.release
 }
 
 dependencies {
+<<<<<<< HEAD
     compile project(':react-native-spinkit')
     compile project(':react-native-material-kit')
     compile project(':react-native-photo-view')
@@ -156,6 +174,11 @@ dependencies {
     compile project(':react-native-svg')
     compile project(':react-native-vector-icons')
     compile project(':react-native-linear-gradient')
+=======
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-push-notification')
+    compile project(':react-native-fcm')
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules

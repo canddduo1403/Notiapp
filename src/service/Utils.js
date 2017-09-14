@@ -10,7 +10,11 @@ const Keys = {
     KEY_USER:'us',
 }
 
+<<<<<<< HEAD
 const ServiceUrlNew = 'https://maas.nuqlis.com:9000'; //Web
+=======
+const ServiceUrlNew = 'https://maas.nuqlis.com:9002'; //Web
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
 const ServiceUrl = 'https://maas.nuqlis.com:9000'; //Web db
 const ServiceGetTime = 'https://maas.nuqlis.com:9001/servertime';
 

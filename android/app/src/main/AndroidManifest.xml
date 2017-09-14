@@ -5,10 +5,18 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+<<<<<<< HEAD
 
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="25" />
+=======
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="22" />
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
 
     <application
       android:name=".MainApplication"

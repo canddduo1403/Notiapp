@@ -1,4 +1,5 @@
 import LocalStorage from './LocalStorage';
+<<<<<<< HEAD
 import { Keys, ServiceUrlNew, ServiceUrl, ServiceGetTime } from './Utils';
 
 const _getOption = function (method, token, credential) {
@@ -9,12 +10,25 @@ const _getOption = function (method, token, credential) {
     };
     if (token) options.headers['Authorization'] = 'JWT ' + token;
     if (credential) {
+=======
+import {Keys,ServiceUrlNew,ServiceUrl,ServiceGetTime} from './Utils';
+
+const _getOption = function(method,token,credential){
+    var options = {
+        method: method,
+        headers: {'Content-Type':'application/json'},
+        body:null
+    };
+    if(token) options.headers['Authorization'] = 'JWT' + token;
+    if(credential){
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
         options.headers['user'] = credential.user;
         options.headers['pass'] = credential.pass;
     }
     return options;
 }
 
+<<<<<<< HEAD
 const authen = function (credential, callback) {
     var options = _getOption('POST', null, credential);
     var result = {};
@@ -82,4 +96,28 @@ module.exports = {
     authen: authen,
     query: query,
     getUserInfo: getUserInfo
+=======
+const authen = function(credential,callback)
+{
+    var options = _getOption('POST',null,credential);
+    var result = {};
+    fetch(ServiceUrl + '/login',options)
+        .then(resp=>{
+            result['token']=resp.headers.get('Authorization');
+            console.log(result);
+            return resp.json()
+        })
+        .then(data=>{
+            if(!data.status)return callback(true,'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+            result['key'] = data.key;
+            callback(null,result);
+        })
+        .catch((err)=>{
+            callback(true,err);
+        });
+}
+
+module.exports={
+    authen: authen
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
 }

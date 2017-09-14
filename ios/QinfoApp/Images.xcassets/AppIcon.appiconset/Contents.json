@@ -2,6 +2,7 @@
   "images" : [
     {
       "idiom" : "iphone",
+<<<<<<< HEAD
       "size" : "20x20",
       "scale" : "2x"
     },
@@ -12,6 +13,8 @@
     },
     {
       "idiom" : "iphone",
+=======
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
       "size" : "29x29",
       "scale" : "2x"
     },

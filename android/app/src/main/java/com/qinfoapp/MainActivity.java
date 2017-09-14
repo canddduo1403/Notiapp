@@ -1,8 +1,11 @@
 package com.qinfoapp;
 
 import com.facebook.react.ReactActivity;
+<<<<<<< HEAD
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 
+=======
+>>>>>>> f83191f222794664d65fd98bbedb6a3d7de3223d
 
 public class MainActivity extends ReactActivity {
 
