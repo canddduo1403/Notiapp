@@ -37,7 +37,7 @@ export default class Attendant_Class extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.containner}>
                 <View style={styles.headerStyle}>
                     <View style={styles.boxStyle}>
                         <Text style={{ marginLeft: 40 }}>ระดับชั้น</Text>
@@ -58,6 +58,12 @@ export default class Attendant_Class extends Component {
 }
 
 const styles = StyleSheet.create({
+
+    containner: {
+        flex: 1,
+        backgroundColor:'#FFEBCD',
+        paddingBottom:10
+    },
 
     headerStyle: {
         backgroundColor: '#F4A460',

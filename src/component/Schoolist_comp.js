@@ -56,24 +56,21 @@ export default class Schoolist extends Component {
 
     _loadUserInfo() {
         API.getCredential((err, msg) => {
-            if (err) return API.alert('ผิดพลาด', msg);
+            if (err) return null;
+
             API.loadUserInfo(msg, (err, msg) => {
                 if (err) {
-                    return API.alert('ผิดพลาด', msg);
+                    return null;
                 } else {
                     var mapping = null;
                     var province = [];
                     var hostid = [];
-
                     for (var k = 0; k < msg.roles.length; k++) {
-
                         if (msg.roles[k] === "ผู้อำนวยการ") {
-                            Actions.Director_Scene({ data: msg });
+                            Actions.Director_Scene();
                             break;
                         }
-
                     }
-
                     for (var i = 0; i < Mapping.mappingqcoachvshost.length; i++) {
                         var tmp = Mapping.mappingqcoachvshost[i];
                         if (tmp.staffid == msg.profile.staffid) {
@@ -101,7 +98,8 @@ export default class Schoolist extends Component {
         var lastWeekprogress = [];
         for (let i = 0; i < hostid.length; i++) {
             Documents.getWeek(hostid[i], (err, msg) => {
-                if (err) return API.alert('ผิดพลาด', msg);
+
+                if (err) return null;
                 else if (msg.length > 0) {
                     hostdata.push(msg)
                     for (let j = 0; j < hostdata.length; j++) {
@@ -111,15 +109,16 @@ export default class Schoolist extends Component {
                     }
                 }
                 maxWeek = Math.max(...week)
-                Documents.getWeekDoc(hostid[i], maxWeek - 1, maxWeek, (err, msg) => {
-                    if (err) return API.alert('ผิดพลาด', msg);
+                Documents.getWeekDoc(hostid[i], 13, 14, (err, msg) => {
+                    if (err) return null;
                     else if (msg.length > 0) {
-                        if (hostid[i] == msg[i].value.doc.hostid) {
-                            lastWeekdata.push(msg[i].value.doc)
+                        if (hostid[i] == msg[0].value.doc.hostid) {
+                            lastWeekdata.push(msg[0].value.doc)
                             lastWeekdata.sort((a, b) => {
                                 return a.hostid - b.hostid
                             })
                         }
+                        console.log(lastWeekdata)
 
                         if (lastWeekdata.length == 2) {
                             for (let k = 0; k < lastWeekdata.length; k++) {
@@ -137,16 +136,16 @@ export default class Schoolist extends Component {
                                 }
                                 lastPerprogress = Math.floor(((lastSt + lastRatio + lastAttend) / (lastFull * 3)) * 100)
                                 lastWeekprogress.push(lastPerprogress)
-
                             }
-
+                            console.log(lastWeekprogress)
+                            if (lastWeekprogress.length > 0) {
+                                this.setState({ maxWeek: maxWeek, lastWeekprogress: lastWeekprogress })
+                                this._getWeekDoc(hostid, maxWeek)
+                            }
                         }
 
                     }
-                    if (lastWeekprogress.length > 0) {
-                        this.setState({ maxWeek: maxWeek, lastWeekprogress: lastWeekprogress })
-                        this._getWeekDoc(hostid, maxWeek)
-                    }
+
                 })
 
             })
@@ -165,43 +164,44 @@ export default class Schoolist extends Component {
 
         for (let i = 0; i < hostid.length; i++) {
             Documents.getWeekDoc(hostid[i], maxWeek, maxWeek + 1, (err, msg) => {
-                if (err) return API.alert('ผิดพลาด', msg);
+                if (err) return null;
                 else if (msg.length > 0) {
-                    if (hostid[i] == msg[i].value.doc.hostid) {
-                        doc.push(msg[i].value.doc)
+                    if (hostid[i] == msg[0].value.doc.hostid) {
+                        doc.push(msg[0].value.doc)
                         doc.sort((a, b) => {
                             return a.hostid - b.hostid
                         })
+                        if (doc.length == 2) {
+                            this._calData(doc)
+                        }
                     }
-                }
-                if (doc.length == 2) {
-                    this._calData(doc)
                 }
             })
         }
     }
 
     _calData(doc) {
+        var province = this.state.province;
+        var maxWeek = this.state.maxWeek;
+        var lastWeek = this.state.lastWeekprogress;
 
-        var province = this.state.province
-        var maxWeek = this.state.maxWeek
-        var lastWeek = this.state.lastWeekprogress
-
+        debugger
         var res = [];
-        for (let i = 0; i < doc.length; i++) {
+        for (var i = 0; i < doc.length; i++) {
+            var resObj = {};
             var st = 0;
             var ratio = 0;
             var at = 0;
             var full = 0;
             var perProgress = 0;
-            for (let j = 0; j < doc[i].datasummary.length; j++) {
+            for (var j = 0; j < doc[i].datasummary.length; j++) {
                 st += doc[i].datasummary[j][1]
                 ratio += doc[i].datasummary[j][2]
                 at += doc[i].datasummary[j][3]
                 full += doc[i].datasummary[j][4]
             }
             perProgress = Math.floor(((st + ratio + at) / (full * 3)) * 100)
-            res.push({
+            resObj = {
                 'hostname': doc[i].hostname,
                 'struct': st,
                 'ratio': ratio,
@@ -211,10 +211,12 @@ export default class Schoolist extends Component {
                 'preprogress': perProgress,
                 'week': maxWeek,
                 'lastweek': lastWeek[i]
-            })
+            }
+            res.push(resObj)
         }
-
+        console.log(res)
         this.setState({ res: res, isLoading: !this.state.isLoading })
+
     }
 
     renderSchoolList() {
@@ -269,7 +271,8 @@ const styles = StyleSheet.create({
     screenStyle: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#FFEBCD'
+        backgroundColor: '#FFEBCD',
+
     },
 
 });

@@ -10,18 +10,18 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import { Icon, Divider, Header, Avatar } from 'react-native-elements'
+import { Icon, Divider, Header, Avatar } from 'react-native-elements';
 
+import { Actions } from 'react-native-router-flux';
 
-
-const window = Dimensions.get('window');
+const Window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   menu: {
     flex: 1,
-    width: window.width,
-    height: window.height,
-    backgroundColor: 'gray',
+    width: Window.width,
+    height: Window.height,
+    backgroundColor: '#8c4827',
     padding: 20,
   },
   iconStyle: {
@@ -36,23 +36,26 @@ const styles = StyleSheet.create({
     padding: 0,
     left: 20,
     color: '#ffffff'
+  },
+  headTextStyle: {
+
   }
 });
 
-export default function Sidemenu({ onItemSelected }) {
+export default function Sidemenu() {
   return (
-    <ScrollView scrollsToTop={false} style={styles.menu}>
+    < ScrollView scrollsToTop={false} style={styles.menu} >
 
       <View style={{ top: 50 }}>
-        <View style={{ flexDirection: 'row',alignContent:'center' }}>
+        <View style={{ flexDirection: 'row', alignContent: 'center' }}>
           <Avatar
             medium
             rounded
             icon={{ name: 'user', type: 'font-awesome' }}
             activeOpacity={0.7}
           />
-          <View style={{ flexDirection: 'column',justifyContent: 'space-between'}}>
-            <Text style={{ left: 20,top:20 }}>User</Text>
+          <View style={{ flexDirection: 'column', justifyContent: 'space-between' }}>
+            <Text style={{ left: 20, top: 20, color: '#ffffff' }}>User</Text>
           </View>
         </View>
         <Divider style={{ right: 20, top: 50 }} />
@@ -64,23 +67,24 @@ export default function Sidemenu({ onItemSelected }) {
       <View style={{
         top: 100, justifyContent: 'space-between',
       }}>
-        <TouchableOpacity style={styles.iconStyle}>
+        <Text style={{ fontWeight: 'bold', fontSize: 20, marginTop: 10, color: '#ffffff' }}>รายงานความก้าวหน้า</Text>
+        <TouchableOpacity style={styles.iconStyle} onPress={() => Actions.Director_Scene()}>
           <Icon name='file-multiple'
             type='material-community'
             color='#ffffff'
           />
-          <Text style={styles.textStyle}>รายงาน</Text>
+          <Text style={styles.textStyle}>แบ่งตามระดับชั้น</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.iconStyle}>
-          <Icon name='account-settings-variant'
+        <TouchableOpacity style={styles.iconStyle} onPress={()=>Actions.Perprogress_Scene()}>
+          <Icon name='file-multiple'
             type='material-community'
             color='#ffffff'
           />
-          <Text style={styles.textStyle}>การตั้งค่า</Text>
+          <Text style={styles.textStyle}>รายบุคคล</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.iconStyle}>
+        <TouchableOpacity style={styles.iconStyle} onPress={() => Actions.Login_Scene()}>
           <Icon name='logout-variant'
             type='material-community'
             color='#ffffff'
@@ -91,10 +95,6 @@ export default function Sidemenu({ onItemSelected }) {
       </View>
 
 
-    </ScrollView>
+    </ScrollView >
   );
 }
-
-Sidemenu.propTypes = {
-  onItemSelected: PropTypes.func.isRequired,
-};

@@ -24,7 +24,9 @@ import Director_Scene from './src/scene/Director_Scene'
 import Tab_Scene from './src/scene/Tab';
 import Schoolist_comp from './src/component/Schoolist_comp';
 import Subdetail_comp from './src/component/Subdetail_comp';
+import Perprogerss from './src/component/Tprogress_comp';
 import Sidemenu_Scene from './src/scene/Sidemenu_Scene';
+import Tdetail from './src/component/Tdetail_comp';
 
 import PushController from './src/component/PushController';
 
@@ -113,6 +115,18 @@ export default class App extends React.Component {
 
             <Scene key="Director_Scene"
               component={Director_Scene}
+              hideNavBar={true}
+              type={ActionConst.REPLACE}
+            />
+
+            <Scene key="Perprogress_Scene"
+              component={Perprogerss}
+              hideNavBar={true}
+              type={ActionConst.REPLACE}
+            />
+
+            <Scene key="Tdetail_Scene"
+              component={Tdetail}
               hideNavBar={true}
               type={ActionConst.REPLACE}
             />
