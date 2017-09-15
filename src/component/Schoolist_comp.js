@@ -93,6 +93,7 @@ export default class Schoolist extends Component {
     _getWeek(hostid) {
         var week = []
         var hostdata = []
+        var maxData = []
         var maxWeek = 0;
         var lastWeekdata = [];
         var lastWeekprogress = [];
@@ -109,72 +110,80 @@ export default class Schoolist extends Component {
                     }
                 }
                 maxWeek = Math.max(...week)
-                Documents.getWeekDoc(hostid[i], 13, 14, (err, msg) => {
+                Documents.getWeekDoc(hostid[i], maxWeek - 1, maxWeek, (err, msg) => {
                     if (err) return null;
                     else if (msg.length > 0) {
-                        if (hostid[i] == msg[0].value.doc.hostid) {
-                            lastWeekdata.push(msg[0].value.doc)
-                            lastWeekdata.sort((a, b) => {
-                                return a.hostid - b.hostid
-                            })
+                        for (let k = 0; k < msg.length; k++) {
+                            if (hostid[i] == msg[k].value.doc.hostid) {
+                                if (typeof msg[k].value.doc.datasummary != 'undefined') {
+                                    lastWeekdata.push(msg[k].value.doc)
+                                }
+                            }
                         }
+                        lastWeekdata.sort((a, b) => {
+                            return a.hostid - b.hostid
+                        })
                         console.log(lastWeekdata)
 
-                        if (lastWeekdata.length == 2) {
-                            for (let k = 0; k < lastWeekdata.length; k++) {
-                                var lastSt = 0
-                                var lastRatio = 0
-                                var lastAttend = 0
-                                var lastFull = 0
-                                var lastPerprogress = 0
+                    }
+                    if (lastWeekdata.length == hostid.length) {
+                        for (let k = 0; k < lastWeekdata.length; k++) {
+                            var lastSt = 0
+                            var lastRatio = 0
+                            var lastAttend = 0
+                            var lastFull = 0
+                            var lastPerprogress = 0
 
-                                for (let j = 0; j < lastWeekdata[k].datasummary.length; j++) {
-                                    lastSt += lastWeekdata[k].datasummary[j][1];
-                                    lastRatio += lastWeekdata[k].datasummary[j][2];
-                                    lastAttend += lastWeekdata[k].datasummary[j][3];
-                                    lastFull += lastWeekdata[k].datasummary[j][4];
-                                }
-                                lastPerprogress = Math.floor(((lastSt + lastRatio + lastAttend) / (lastFull * 3)) * 100)
-                                lastWeekprogress.push(lastPerprogress)
+                            for (let j = 0; j < lastWeekdata[k].datasummary.length; j++) {
+                                lastSt += lastWeekdata[k].datasummary[j][1];
+                                lastRatio += lastWeekdata[k].datasummary[j][2];
+                                lastAttend += lastWeekdata[k].datasummary[j][3];
+                                lastFull += lastWeekdata[k].datasummary[j][4];
                             }
-                            console.log(lastWeekprogress)
-                            if (lastWeekprogress.length > 0) {
-                                this.setState({ maxWeek: maxWeek, lastWeekprogress: lastWeekprogress })
-                                this._getWeekDoc(hostid, maxWeek)
-                            }
+                            lastPerprogress = Math.floor(((lastSt + lastRatio + lastAttend) / (lastFull * 3)) * 100)
+                            lastWeekprogress.push(lastPerprogress)
+                        }
+                        if (lastWeekprogress.length > 0) {
+                            this.setState({ maxWeek: maxWeek, lastWeekprogress: lastWeekprogress })
+                            this._getWeekDoc(hostid, maxWeek)
                         }
 
                     }
 
                 })
-
             })
 
         }
+
     }
 
     _getWeekDoc(hostid, maxWeek) {
-        const doc = [];
+        var doc = [];
         var full = 0;
         var struct = 0;
         var sRatio = 0;
         var attend = 0;
-        const res = [];
-        const resObj = {};
+        var res = [];
+        var resObj = {};
 
         for (let i = 0; i < hostid.length; i++) {
             Documents.getWeekDoc(hostid[i], maxWeek, maxWeek + 1, (err, msg) => {
                 if (err) return null;
                 else if (msg.length > 0) {
-                    if (hostid[i] == msg[0].value.doc.hostid) {
-                        doc.push(msg[0].value.doc)
-                        doc.sort((a, b) => {
-                            return a.hostid - b.hostid
-                        })
-                        if (doc.length == 2) {
-                            this._calData(doc)
+                    for (let j = 0; j < msg.length; j++) {
+                        if (hostid[i] == msg[j].value.doc.hostid) {
+                            if (typeof msg[j].value.doc.datasummary != 'undefined') {
+                                doc.push(msg[j].value.doc)
+                            }
                         }
+
                     }
+                    doc.sort((a, b) => {
+                        return a.hostid - b.hostid
+                    })
+                }
+                if (doc.length == hostid.length) {
+                    this._calData(doc)
                 }
             })
         }
@@ -185,7 +194,6 @@ export default class Schoolist extends Component {
         var maxWeek = this.state.maxWeek;
         var lastWeek = this.state.lastWeekprogress;
 
-        debugger
         var res = [];
         for (var i = 0; i < doc.length; i++) {
             var resObj = {};

@@ -47,8 +47,6 @@ export default class Subdetail extends Component {
 
     render() {
 
-        console.log(this.state.res)
-
         return (
             <View style={styles.bgStyle}>
                 <Header
